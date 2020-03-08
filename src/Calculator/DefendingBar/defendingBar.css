@@ -1,0 +1,11 @@
+.defendingBarBtn {
+  width: 50%;
+}
+
+.terrainBonusON {
+  color: goldenrod;
+}
+
+.terrainBonusOFF {
+  color: crimson;
+}

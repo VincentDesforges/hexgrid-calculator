@@ -7,6 +7,7 @@ import DefendingBar from './DefendingBar/defendingBar';
 
 class Calculator extends Component {
   state = {
+    // calculation variables
     attacking_units: {
       infantry: 0,
       cavalry: 0,
@@ -14,9 +15,10 @@ class Calculator extends Component {
       general: 0
     },
     defending_unit: null,
-    defending_unit_in_town_or_mountain: false
-    // defending_unit: "infantry",
-    // defending_unit_in_town_or_mountain: true
+    defending_unit_in_town_or_mountain: false,
+    // UX variables:
+    show_decrement_attack: null,
+    dropdown_defence: false
   }
 
   interpretOutcome = (outcome) => {
@@ -65,18 +67,59 @@ class Calculator extends Component {
     }
   }
 
+  incrementUnitToAttack = (unitType, is_added) => {
+    this.setState((state, props) => {
+      const newAttackingUnits = state.attacking_units;
+      if (!(is_added === false && state.attacking_units[unitType] === 0)) {
+        newAttackingUnits[unitType] = is_added ? newAttackingUnits[unitType] + 1 : newAttackingUnits[unitType] - 1;
+      }
+      return {attacking_units: newAttackingUnits};
+    });
+  }
+
+  setDefensiveUnit = unitType => {
+    this.setState({defending_unit: unitType, dropdown_defence: false})
+  }
+
+  toggleUnitSelectionVisibility = unitType => {
+    this.setState((state, props) => {
+      return {dropdown_defence: !state.dropdown_defence}
+    });
+  }
+
+  toggleTerrainBonus = () => {
+    this.setState((state, props) => {
+      return {defending_unit_in_town_or_mountain: !state.defending_unit_in_town_or_mountain}
+    });
+  }
+
   render() {
     return (
       <div className="Calculator">
-        <DefendingBar />
+        <DefendingBar
+        terrainBonusOn={this.state.defending_unit_in_town_or_mountain}
+        showDropdownDefence={this.state.dropdown_defence}
+        toggleTerrainBonus={this.toggleTerrainBonus}
+        toggleUnitSelectionVisibility={this.toggleUnitSelectionVisibility}
+        setDefensiveUnit={this.setDefensiveUnit}
+        defending_unit={this.state.defending_unit}
+        />
         <div className="CalculatorContent">
           <p>This is the Calculator</p>
           <p>Attacking player: player {this.state.attacking_player} | Strike points: {this.computeAttackingStrikePoints()}</p>
+          <button onClick={() => this.incrementUnitToAttack("infantry", false)} >Decrement infantry</button>
+          <button onClick={() => this.incrementUnitToAttack("cavalry", false)} >Decrement cavalry</button>
+          <button onClick={() => this.incrementUnitToAttack("artillery", false)} >Decrement artillery</button>
+          <button onClick={() => this.incrementUnitToAttack("general", false)} >Decrement general</button>
           <p>Defending player: player {this.state.attacking_player === 1 ? 2 : 1} | Strike points: {this.computeDefendingStrikePoints()}</p>
           <button onClick={this.determineOutcome}>Determine outcome!</button>
           <p>Outcome: {}</p>
         </div>
-        <AttackingBar />
+
+        <AttackingBar
+          addOrRemoveUnit={this.incrementUnitToAttack}
+          showDecrement={this.show_decrement_attack}
+        />
       </div>
     );
   }
