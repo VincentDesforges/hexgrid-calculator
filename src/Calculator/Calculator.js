@@ -16,6 +16,7 @@ class Calculator extends Component {
     },
     defending_unit: null,
     defending_unit_in_town_or_mountain: false,
+    latest_result: null,
     // UX variables:
     show_decrement_attack: null,
     dropdown_defence: false
@@ -61,6 +62,7 @@ class Calculator extends Component {
       console.log(ratio);
       console.log(diceRoll);
       console.log(this.interpretOutcome(outcome));
+      this.setState({latest_result: this.interpretOutcome(outcome)})
       return this.interpretOutcome(outcome);
     } else {
       return null;
@@ -73,7 +75,8 @@ class Calculator extends Component {
       if (!(is_added === false && state.attacking_units[unitType] === 0)) {
         newAttackingUnits[unitType] = is_added ? newAttackingUnits[unitType] + 1 : newAttackingUnits[unitType] - 1;
       }
-      return {attacking_units: newAttackingUnits};
+      // show the visibility of the decrement for the currently concered unit
+      return {attacking_units: newAttackingUnits, show_decrement_attack: unitType};
     });
   }
 
@@ -105,20 +108,15 @@ class Calculator extends Component {
         defending_unit={this.state.defending_unit}
         />
         <div className="CalculatorContent">
-          <p>This is the Calculator</p>
           <p>Attacking player: player {this.state.attacking_player} | Strike points: {this.computeAttackingStrikePoints()}</p>
-          <button onClick={() => this.incrementUnitToAttack("infantry", false)} >Decrement infantry</button>
-          <button onClick={() => this.incrementUnitToAttack("cavalry", false)} >Decrement cavalry</button>
-          <button onClick={() => this.incrementUnitToAttack("artillery", false)} >Decrement artillery</button>
-          <button onClick={() => this.incrementUnitToAttack("general", false)} >Decrement general</button>
           <p>Defending player: player {this.state.attacking_player === 1 ? 2 : 1} | Strike points: {this.computeDefendingStrikePoints()}</p>
           <button onClick={this.determineOutcome}>Determine outcome!</button>
-          <p>Outcome: {}</p>
+          <p>Outcome: {this.state.latest_result}</p>
         </div>
 
         <AttackingBar
           addOrRemoveUnit={this.incrementUnitToAttack}
-          showDecrement={this.show_decrement_attack}
+          showDecrement={this.state.show_decrement_attack}
         />
       </div>
     );

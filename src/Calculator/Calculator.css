@@ -15,7 +15,6 @@
 }
 
 .actionBarBtn {
-  background-color: green;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -23,7 +22,19 @@
   user-select: none;
 }
 
-.actionBarBtn:hover {
+.defendingBarBtn:hover {
+  opacity: 0.5;
+}
+
+.defendingBarBtnSelect:hover {
+  opacity: 0.5;
+}
+
+.actionBarBtnAdd:hover {
+  opacity: 0.5;
+}
+
+.decrementUnitBtn:hover {
   opacity: 0.5;
 }
 

@@ -9,7 +9,6 @@ import generalLogo from '../../assets/general_logo.png';
 
 const defendingBar = props => {
   let logoSrc = unselectedLogo;
-  console.log(props.defending_unit)
   switch(props.defending_unit) {
     case "infantry":
       logoSrc = infantryLogo
@@ -37,11 +36,12 @@ const defendingBar = props => {
         className="defendingBarBtn actionBarBtn"
         style={{ fontWeight: 900 }}
         onClick={props.toggleTerrainBonus}>Terrain Bonus <span><span className={props.terrainBonusOn ? "terrainBonusON" : null}>ON</span>/<span className={props.terrainBonusOn ? null:  "terrainBonusOFF"} >OFF</span></span></div>
+        
+        <UnitSelectionBar
+        setDefensiveUnit={props.setDefensiveUnit}
+        showElement={props.showDropdownDefence}
+        />
       </div>
-      <UnitSelectionBar
-      setDefensiveUnit={props.setDefensiveUnit}
-      showElement={props.showDropdownDefence}
-      />
     </React.Fragment>
   );
 };
