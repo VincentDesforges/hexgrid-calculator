@@ -5,6 +5,7 @@ import * as Constants from '../constants';
 import AttackingBar from './AttackingBar/attackingBar';
 import DefendingBar from './DefendingBar/defendingBar';
 import UnitSelection from './Screens/UnitSelection/unitSelection';
+import BlurComponent from './UtilityComponents/BlurComponent/blurComponent';
 
 class Calculator extends Component {
   state = {
@@ -95,6 +96,12 @@ class Calculator extends Component {
     });
   }
 
+  closeUxComponents = () => {
+    this.setState((state, props) => {
+      return {show_decrement_attack: null, dropdown_defence: false}
+    });
+  }
+
   toggleTerrainBonus = () => {
     this.setState((state, props) => {
       return {defending_unit_in_town_or_mountain: !state.defending_unit_in_town_or_mountain}
@@ -102,8 +109,11 @@ class Calculator extends Component {
   }
 
   render() {
+    // This will either show or hide the overlay used to deselect UX components
+    const BlurComponentToShow = (this.state.show_decrement_attack !== null || this.state.dropdown_defence) ? <BlurComponent closeUxComponents={this.closeUxComponents}/> : null
     return (
       <div className="Calculator">
+        {BlurComponentToShow}
         <DefendingBar
         terrainBonusOn={this.state.defending_unit_in_town_or_mountain}
         showDropdownDefence={this.state.dropdown_defence}
