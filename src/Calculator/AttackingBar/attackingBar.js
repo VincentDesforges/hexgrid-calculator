@@ -9,7 +9,6 @@ import artilleryLogo from '../../assets/artillery_logo.png';
 import generalLogo from '../../assets/general_logo.png';
 
 const attackingBar = props => {
-  console.log(props)
   return (
     <div className="attackingBar actionBar">
       <div className="attackingBarBtn actionBarBtn">

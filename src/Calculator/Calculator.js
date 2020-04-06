@@ -4,6 +4,7 @@ import * as Constants from '../constants';
 
 import AttackingBar from './AttackingBar/attackingBar';
 import DefendingBar from './DefendingBar/defendingBar';
+import UnitSelection from './Screens/UnitSelection/unitSelection';
 
 class Calculator extends Component {
   state = {
@@ -19,7 +20,11 @@ class Calculator extends Component {
     latest_result: null,
     // UX variables:
     show_decrement_attack: null,
-    dropdown_defence: false
+    dropdown_defence: false,
+    // Screen variables
+    units_selected: false,
+    units_confirmed: false,
+    game_resoved: false
   }
 
   interpretOutcome = (outcome) => {
@@ -107,16 +112,14 @@ class Calculator extends Component {
         setDefensiveUnit={this.setDefensiveUnit}
         defending_unit={this.state.defending_unit}
         />
-        <div className="CalculatorContent">
-          <p>Attacking player: player {this.state.attacking_player} | Strike points: {this.computeAttackingStrikePoints()}</p>
-          <p>Defending player: player {this.state.attacking_player === 1 ? 2 : 1} | Strike points: {this.computeDefendingStrikePoints()}</p>
-          <button onClick={this.determineOutcome}>Determine outcome!</button>
-          <p>Outcome: {this.state.latest_result}</p>
-        </div>
-
+        <UnitSelection 
+        computeAttackingStrikePoints={this.computeAttackingStrikePoints}
+        computeDefendingStrikePoints={this.computeDefendingStrikePoints}
+        defending_unit={this.state.defending_unit}
+        />
         <AttackingBar
-          addOrRemoveUnit={this.incrementUnitToAttack}
-          showDecrement={this.state.show_decrement_attack}
+        addOrRemoveUnit={this.incrementUnitToAttack}
+        showDecrement={this.state.show_decrement_attack}
         />
       </div>
     );

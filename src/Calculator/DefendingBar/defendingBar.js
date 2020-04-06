@@ -1,6 +1,7 @@
 import React from 'react';
 import './defendingBar.css';
 import UnitSelectionBar from './UnitSelectionBar/unitSelectionBar'
+
 import unselectedLogo from '../../assets/unselected_logo.png';
 import infantryLogo from '../../assets/infantry_logo.png';
 import cavalryLogo from '../../assets/cavalry_logo.png';
@@ -36,7 +37,7 @@ const defendingBar = props => {
         className="defendingBarBtn actionBarBtn"
         style={{ fontWeight: 900 }}
         onClick={props.toggleTerrainBonus}>Terrain Bonus <span><span className={props.terrainBonusOn ? "terrainBonusON" : null}>ON</span>/<span className={props.terrainBonusOn ? null:  "terrainBonusOFF"} >OFF</span></span></div>
-        
+
         <UnitSelectionBar
         setDefensiveUnit={props.setDefensiveUnit}
         showElement={props.showDropdownDefence}
