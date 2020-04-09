@@ -23,9 +23,7 @@ class Calculator extends Component {
     show_decrement_attack: null,
     dropdown_defence: false,
     // Screen variables
-    units_selected: false,
-    units_confirmed: false,
-    game_resoved: false
+    screen_state: "start" // (start, units_selected, units_confirmed, game_resoved)
   }
 
   interpretOutcome = (outcome) => {
@@ -108,6 +106,15 @@ class Calculator extends Component {
     });
   }
 
+  setScreenStatus = screen => {
+    // Expects screen to be either ("start", "units_selected", "units_confirmed", "game_resoved")
+    if (["start", "units_selected", "units_confirmed", "game_resoved"].includes(screen)) {
+      this.setState({screen_state: screen});
+    } else {
+      throw "Parameter is not supported by setScreenStatus!";
+    }
+  }
+
   render() {
     // This will either show or hide the overlay used to deselect UX components
     const BlurComponentToShow = (this.state.show_decrement_attack !== null || this.state.dropdown_defence) ? <BlurComponent closeUxComponents={this.closeUxComponents}/> : null
@@ -126,6 +133,8 @@ class Calculator extends Component {
         computeAttackingStrikePoints={this.computeAttackingStrikePoints}
         computeDefendingStrikePoints={this.computeDefendingStrikePoints}
         defending_unit={this.state.defending_unit}
+        defensive_bonus={this.state.defending_unit_in_town_or_mountain}
+        attacking_units={this.state.attacking_units}
         />
         <AttackingBar
         addOrRemoveUnit={this.incrementUnitToAttack}
