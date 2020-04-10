@@ -26,8 +26,8 @@ const unitSelection = props => {
   }
 
   const defensiveUnit = <img src={logoSrc} alt="Defensive Unit" className="unitLogo" />
-  const nextPageBtn = <div className="progressButton CompDoneBtn">Confirm Selection</div>
-
+  const nextPageBtn = <div className="progressButton CompDoneBtn" onClick={() => props.setScreenStatus("units_selected")}>Confirm Selection</div>
+  
   return (
     <div className="CalculatorContent UnitSelectionScreen">
       {(props.computeDefendingStrikePoints() > 0 && props.computeAttackingStrikePoints() > 0) ? nextPageBtn : null}

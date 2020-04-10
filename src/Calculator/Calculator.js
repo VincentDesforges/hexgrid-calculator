@@ -5,6 +5,7 @@ import * as Constants from '../constants';
 import AttackingBar from './AttackingBar/attackingBar';
 import DefendingBar from './DefendingBar/defendingBar';
 import UnitSelection from './Screens/UnitSelection/unitSelection';
+import Confirmation from './Screens/Confirmation/confirmation';
 import BlurComponent from './UtilityComponents/BlurComponent/blurComponent';
 
 class Calculator extends Component {
@@ -109,8 +110,13 @@ class Calculator extends Component {
   setScreenStatus = screen => {
     // Expects screen to be either ("start", "units_selected", "units_confirmed", "game_resoved")
     if (["start", "units_selected", "units_confirmed", "game_resoved"].includes(screen)) {
-      this.setState({screen_state: screen});
+      this.setState({
+        screen_state: screen,
+        show_decrement_attack: null,
+        dropdown_defence: false
+      });
     } else {
+      // eslint-disable-next-line
       throw "Parameter is not supported by setScreenStatus!";
     }
   }
@@ -118,28 +124,43 @@ class Calculator extends Component {
   render() {
     // This will either show or hide the overlay used to deselect UX components
     const BlurComponentToShow = (this.state.show_decrement_attack !== null || this.state.dropdown_defence) ? <BlurComponent closeUxComponents={this.closeUxComponents}/> : null
+
+    const UnitSelectionScreenElement = <React.Fragment>
+      <DefendingBar
+      terrainBonusOn={this.state.defending_unit_in_town_or_mountain}
+      showDropdownDefence={this.state.dropdown_defence}
+      toggleTerrainBonus={this.toggleTerrainBonus}
+      toggleUnitSelectionVisibility={this.toggleUnitSelectionVisibility}
+      setDefensiveUnit={this.setDefensiveUnit}
+      defending_unit={this.state.defending_unit}
+      />
+      <UnitSelection 
+      computeAttackingStrikePoints={this.computeAttackingStrikePoints}
+      computeDefendingStrikePoints={this.computeDefendingStrikePoints}
+      setScreenStatus={this.setScreenStatus}
+      defending_unit={this.state.defending_unit}
+      defensive_bonus={this.state.defending_unit_in_town_or_mountain}
+      attacking_units={this.state.attacking_units}
+      />
+      <AttackingBar
+      addOrRemoveUnit={this.incrementUnitToAttack}
+      showDecrement={this.state.show_decrement_attack}
+      />
+    </React.Fragment>
+
+    const ConfirmationScreenElement = <Confirmation 
+    computeAttackingStrikePoints={this.computeAttackingStrikePoints}
+    computeDefendingStrikePoints={this.computeDefendingStrikePoints}
+    setScreenStatus={this.setScreenStatus}
+    />
+
+    const ScreenShown = this.state.screen_state === "start" ? UnitSelectionScreenElement : (this.state.screen_state === "units_selected" ? ConfirmationScreenElement : null)
+
+
     return (
       <div className="Calculator">
         {BlurComponentToShow}
-        <DefendingBar
-        terrainBonusOn={this.state.defending_unit_in_town_or_mountain}
-        showDropdownDefence={this.state.dropdown_defence}
-        toggleTerrainBonus={this.toggleTerrainBonus}
-        toggleUnitSelectionVisibility={this.toggleUnitSelectionVisibility}
-        setDefensiveUnit={this.setDefensiveUnit}
-        defending_unit={this.state.defending_unit}
-        />
-        <UnitSelection 
-        computeAttackingStrikePoints={this.computeAttackingStrikePoints}
-        computeDefendingStrikePoints={this.computeDefendingStrikePoints}
-        defending_unit={this.state.defending_unit}
-        defensive_bonus={this.state.defending_unit_in_town_or_mountain}
-        attacking_units={this.state.attacking_units}
-        />
-        <AttackingBar
-        addOrRemoveUnit={this.incrementUnitToAttack}
-        showDecrement={this.state.show_decrement_attack}
-        />
+        {ScreenShown}
       </div>
     );
   }
