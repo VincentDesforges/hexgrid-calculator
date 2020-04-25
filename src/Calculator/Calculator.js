@@ -6,6 +6,7 @@ import AttackingBar from './AttackingBar/attackingBar';
 import DefendingBar from './DefendingBar/defendingBar';
 import UnitSelection from './Screens/UnitSelection/unitSelection';
 import Confirmation from './Screens/Confirmation/confirmation';
+import GameResolution from './Screens/GameResolution/gameResolution';
 import BlurComponent from './UtilityComponents/BlurComponent/blurComponent';
 
 class Calculator extends Component {
@@ -24,7 +25,7 @@ class Calculator extends Component {
     show_decrement_attack: null,
     dropdown_defence: false,
     // Screen variables
-    screen_state: "start" // (start, units_selected, units_confirmed, game_resoved)
+    screen_state: "start" // (start, units_selected, units_confirmed, game_resolved)
   }
 
   interpretOutcome = (outcome) => {
@@ -67,7 +68,7 @@ class Calculator extends Component {
       console.log(ratio);
       console.log(diceRoll);
       console.log(this.interpretOutcome(outcome));
-      this.setState({latest_result: this.interpretOutcome(outcome)})
+      // this.setState({latest_result: this.interpretOutcome(outcome)})
       return this.interpretOutcome(outcome);
     } else {
       return null;
@@ -108,8 +109,8 @@ class Calculator extends Component {
   }
 
   setScreenStatus = screen => {
-    // Expects screen to be either ("start", "units_selected", "units_confirmed", "game_resoved")
-    if (["start", "units_selected", "units_confirmed", "game_resoved"].includes(screen)) {
+    // Expects screen to be either ("start", "units_selected", "units_confirmed", "game_resolved")
+    if (["start", "units_selected", "units_confirmed", "game_resolved"].includes(screen)) {
       this.setState({
         screen_state: screen,
         show_decrement_attack: null,
@@ -119,6 +120,25 @@ class Calculator extends Component {
       // eslint-disable-next-line
       throw "Parameter is not supported by setScreenStatus!";
     }
+  }
+
+  resetCalculator = () => {
+    this.setState({
+      // calculation variables
+      attacking_units: {
+        infantry: 0,
+        cavalry: 0,
+        artillery: 0,
+        general: 0
+      },
+      defending_unit: null,
+      defending_unit_in_town_or_mountain: false,
+      // UX variables:
+      show_decrement_attack: null,
+      dropdown_defence: false,
+      // Screen variables
+      screen_state: "start"
+    });
   }
 
   render() {
@@ -154,13 +174,21 @@ class Calculator extends Component {
     setScreenStatus={this.setScreenStatus}
     />
 
-    const ScreenShown = this.state.screen_state === "start" ? UnitSelectionScreenElement : (this.state.screen_state === "units_selected" ? ConfirmationScreenElement : null)
-
+    const ResolutionScreenElement = <GameResolution
+    computeAttackingStrikePoints={this.computeAttackingStrikePoints}
+    computeDefendingStrikePoints={this.computeDefendingStrikePoints}
+    setScreenStatus={this.setScreenStatus}
+    determineOutcome={this.determineOutcome}
+    needToShowOutcome={this.state.screen_state === "game_resolved"}
+    resetCalculator={this.resetCalculator}
+    />
 
     return (
       <div className="Calculator">
         {BlurComponentToShow}
-        {ScreenShown}
+        {this.state.screen_state === "start"           ? UnitSelectionScreenElement : null}
+        {this.state.screen_state === "units_selected"  ? ConfirmationScreenElement  : null}
+        {(this.state.screen_state === "units_confirmed" || this.state.screen_state === "game_resolved") ? ResolutionScreenElement    : null}
       </div>
     );
   }

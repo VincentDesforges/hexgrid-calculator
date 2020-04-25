@@ -1,0 +1,14 @@
+.ReturnToConfirmBtn{
+  top: calc(0% + 450px);
+  left: calc(50% - 65px);;
+}
+
+.RollDiceBtn{
+  top: calc(0% + 500px);
+  left: calc(50% - 72.5px);;
+}
+
+.ResetCalcBtn{
+  top: calc(0% + 500px);
+  left: calc(50% - 90px);;
+}
